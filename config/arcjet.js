@@ -3,18 +3,19 @@ import { ARCJET_KEY } from "../config/env.js";
 
 export const aj = arcjet({
   key: ARCJET_KEY,
+  // Only use IP for characteristics since user-agent is problematic
   characteristics: ["ip.src"],
   rules: [
-    shield({ mode: "LIVE" }),
+    shield({ mode: "DRY_RUN" }), // Disable during testing
     detectBot({
       mode: "LIVE",
-      allow: ["CATEGORY:SEARCH_ENGINE"],
+      allow: ["BOT:POSTMAN", "USER_AGENT:PostmanRuntime*"],
     }),
     tokenBucket({
       mode: "LIVE",
-      refillRate: 5,
+      refillRate: 10,
       interval: 10,
-      capacity: 10,
+      capacity: 20,
     }),
   ],
 });
